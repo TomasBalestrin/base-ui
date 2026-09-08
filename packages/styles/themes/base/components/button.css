@@ -1,0 +1,7 @@
+/*
+  Base density: 32px button (vs. HeroUI default 40px/36px), 6px radius
+  (vs. pill). Matches tokens.css --control-h-md: 32px.
+*/
+.button {
+  @apply h-8 rounded-md md:h-8;
+}

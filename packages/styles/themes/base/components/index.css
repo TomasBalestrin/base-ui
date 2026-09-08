@@ -1,0 +1,9 @@
+/*
+  Base Theme — component density overrides.
+
+  Applied incrementally: start with the highest-traffic components
+  (button first), validate visually in Storybook, then extend. Do not
+  batch all components at once — a wrong override here is a silent
+  visual regression across every consumer of the lib.
+*/
+@import "./button.css";

@@ -30,6 +30,10 @@
       "import": "./src/components/*/index.ts",
       "default": "./src/components/*/index.ts"
     },
+    "./themes/base": {
+      "style": "./themes/base/index.css",
+      "default": "./themes/base/index.css"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": [
