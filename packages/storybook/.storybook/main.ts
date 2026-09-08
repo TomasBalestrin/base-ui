@@ -36,6 +36,9 @@ const config: StorybookConfig = {
     disableWhatsNewNotifications: true,
     enableCrashReports: false,
   },
+  features: {
+    sidebarOnboardingChecklist: false,
+  },
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -48,7 +51,6 @@ const config: StorybookConfig = {
     },
   ],
   stories: [
-    "./welcome.mdx",
     "./stories/colors.stories.tsx",
     "./stories/colors-demo.stories.tsx",
     "./stories/demo.stories.tsx",

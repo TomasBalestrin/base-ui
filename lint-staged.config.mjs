@@ -16,7 +16,7 @@ const removeIgnoredFilesNew = async (files) => {
     const relativePaths = files.map((file) => relative(cwd, file));
     const isIgnored = await Promise.all(relativePaths.map((file) => eslint.isPathIgnored(file)));
 
-    return files.filter((_, i) => !isIgnored[i]).join(" ");
+    return files.filter((_, i) => !isIgnored[i]);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);
@@ -50,9 +50,13 @@ const lintStaged = {
       // use ESLint with experimental configuration file resolution
       const filesToLint = await removeIgnoredFilesNew(files);
 
-      return [
-        `eslint --flag v10_config_lookup_from_file --max-warnings=0 --no-warn-ignored --fix ${filesToLint}`,
-      ];
+      return filesToLint.length
+        ? [
+            `eslint --flag v10_config_lookup_from_file --max-warnings=0 --no-warn-ignored --fix ${filesToLint
+              .map((f) => `"${f}"`)
+              .join(" ")}`,
+          ]
+        : [];
     }
 
     if (LINT_MODE === "Legacy") {
@@ -91,7 +95,9 @@ const lintStaged = {
   },
 
   "**/*.{html,css,scss,json,jsonc,md,mdx}": async (files) => {
-    return [`prettier --ignore-path .prettierignore --write ${files.join(" ")}`];
+    return [
+      `prettier --ignore-path .prettierignore --write ${files.map((f) => `"${f}"`).join(" ")}`,
+    ];
   },
 };
 

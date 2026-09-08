@@ -5,7 +5,7 @@ import conventional from "@commitlint/config-conventional";
  */
 const commitLintConfig = {
   extends: ["@commitlint/config-conventional"],
-  helpUrl: "https://github.com/heroui-inc/heroui/blob/main/CONTRIBUTING.md#commit-convention",
+  helpUrl: "https://www.conventionalcommits.org/",
   rules: {
     ...conventional.rules,
     "header-max-length": [0],

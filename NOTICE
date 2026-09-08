@@ -1,0 +1,16 @@
+Base UI
+Copyright 2026 Bruno / MV4 Digital
+
+This product includes software originally developed by NextUI Inc.
+("HeroUI"), licensed under the Apache License, Version 2.0.
+Source: https://github.com/heroui-inc/heroui
+
+This product includes software originally developed by Adobe
+("React Aria" / "React Spectrum"), licensed under the Apache License,
+Version 2.0. Portions of the following files are derived from Adobe's
+react-spectrum project and retain their original copyright headers:
+
+  - packages/react/src/hooks/use-list-data.ts
+  - packages/react/src/utils/dom.tsx
+
+See the LICENSE file for the full text of the Apache License, Version 2.0.
