@@ -45,6 +45,12 @@ async function removeIgnoredFilesLegacy(files, eslint) {
 }
 
 const lintStaged = {
+  // Guards the base-ui skill against drift: if a token/component source
+  // file is staged, the generated references/*.md must already reflect
+  // it. Commit fails with `pnpm skill:gen` as the fix.
+  "(packages/styles/themes/base/**/*.css|packages/styles/src/components/**/*.styles.ts|packages/react/src/components/index.ts)":
+    () => ["node skills/base-ui/scripts/check-drift.mjs"],
+
   "**/*.{cjs,mjs,js,ts,jsx,tsx}": async (files) => {
     if (LINT_MODE === "Experimental") {
       // use ESLint with experimental configuration file resolution
