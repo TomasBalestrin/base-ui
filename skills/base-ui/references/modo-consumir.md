@@ -34,8 +34,11 @@ grep -E '"react":|"tailwindcss":' package.json
 ## 2. Instalação (se ainda não configurado)
 
 ```bash
-pnpm add "@heroui/react@git+ssh://git@github.com/<org>/base-ui.git" "@heroui/styles@git+ssh://git@github.com/<org>/base-ui.git"
+pnpm add "@heroui/react@git+ssh://git@github.com/TomasBalestrin/base-ui.git#release&path:packages/react" \
+         "@heroui/styles@git+ssh://git@github.com/TomasBalestrin/base-ui.git#release&path:packages/styles"
 ```
+
+A branch `release` (não `main`) tem os pacotes já buildados — é a única coisa instalável. `main` é código-fonte, não instala. Sempre os dois juntos: `@heroui/react` fixa `@heroui/styles` numa versão específica, então instalar só um pode ficar dessincronizado.
 
 No CSS global do app (uma vez só, antes de qualquer componente ser usado):
 
