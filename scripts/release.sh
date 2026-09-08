@@ -78,7 +78,14 @@ echo "==> Assembling orphan 'release' branch in a separate worktree"
 if git show-ref --verify --quiet refs/heads/release; then
   git worktree add -q "$WORKTREE_DIR" release
 else
-  git worktree add -q --orphan -b release "$WORKTREE_DIR"
+  # Older git (<2.42) lacks `worktree add --orphan`: create the empty
+  # orphan branch via a detached worktree, then switch it to `release`.
+  git worktree add -q --detach "$WORKTREE_DIR" HEAD
+  (
+    cd "$WORKTREE_DIR"
+    git checkout -q --orphan release
+    git rm -rfq . > /dev/null 2>&1 || true
+  )
 fi
 
 (
