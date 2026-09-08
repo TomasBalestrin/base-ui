@@ -3,16 +3,21 @@
 # `release` orphan branch as a minimal two-package pnpm workspace, so
 # consumers can install straight from git:
 #
-#   "@heroui/react": "git+ssh://git@github.com/<org>/base-ui.git#release"
-#   "@heroui/styles": "git+ssh://git@github.com/<org>/base-ui.git#release"
+#   "@heroui/react": "git+ssh://git@github.com/<org>/base-ui.git#release&path:packages/react"
+#   "@heroui/styles": "git+ssh://git@github.com/<org>/base-ui.git#release&path:packages/styles"
 #
-# Why a two-package workspace and not npm-style standalone packages:
-# @heroui/react depends on @heroui/styles via "workspace:*", which only
-# resolves inside a real pnpm workspace. Rewriting it to a pinned semver
-# range would let each package install in isolation, but then a react
-# release and its matching styles release could drift out of sync
-# silently. Shipping both together, always in lockstep, is the safer
-# default for an internal design system with one integrator.
+# Why both packages ship in the same branch: pnpm needs the workspace
+# root to resolve `pnpm-workspace.yaml`, so both live under one commit.
+#
+# Why @heroui/react's "workspace:*" dependency on @heroui/styles is
+# rewritten to a pinned version here (verified, not assumed): a
+# consumer installing @heroui/react in isolation via
+# `git+...#release&path:packages/react` gets its own pnpm install
+# rooted at that subpath — pnpm never sees @heroui/styles as a
+# workspace sibling, so "workspace:*" resolves to nothing and the
+# install fails with ERR_PNPM_WORKSPACE_PKG_NOT_FOUND. Pinning here
+# means updating either package requires re-running this script for
+# both, same discipline `pnpm publish` already enforces.
 #
 # Safety: the orphan branch is assembled in a separate `git worktree`
 # (its own directory, same repo) — never on the checkout that invoked
@@ -47,6 +52,8 @@ cleanup() {
 trap cleanup EXIT
 
 echo "==> Staging package.json (publish-time exports) via clean-package"
+STYLES_VERSION="$(node -p "require('./packages/styles/package.json').version")"
+
 for pkg in react styles; do
   mkdir -p "$STAGE_DIR/packages/$pkg"
   (
@@ -60,6 +67,20 @@ for pkg in react styles; do
   )
   cp -R "packages/$pkg/dist" "$STAGE_DIR/packages/$pkg/dist"
 done
+
+# "workspace:*" only resolves inside a real pnpm workspace being
+# installed as a whole. A consumer installing @heroui/react via
+# `git+...#release&path:packages/react` in isolation loses that
+# workspace context — pnpm reports @heroui/styles as missing even
+# though it's a sibling in the same repo. Pin it to the real version
+# instead, same as `pnpm publish` would.
+node -e "
+  const fs = require('fs');
+  const p = '$STAGE_DIR/packages/react/package.json';
+  const pkg = JSON.parse(fs.readFileSync(p, 'utf-8'));
+  pkg.dependencies['@heroui/styles'] = '^$STYLES_VERSION';
+  fs.writeFileSync(p, JSON.stringify(pkg, null, 2) + '\n');
+"
 
 cat > "$STAGE_DIR/pnpm-workspace.yaml" <<'EOF'
 packages:
@@ -106,5 +127,5 @@ echo "✓ Branch 'release' updated locally (based on $CURRENT_COMMIT). Push with
 echo "    git push origin release --force"
 echo ""
 echo "Consumers install with:"
-echo '    "@heroui/react": "git+ssh://git@github.com/<org>/base-ui.git#release"'
-echo '    "@heroui/styles": "git+ssh://git@github.com/<org>/base-ui.git#release"'
+echo '    "@heroui/react": "git+ssh://git@github.com/<org>/base-ui.git#release&path:packages/react"'
+echo '    "@heroui/styles": "git+ssh://git@github.com/<org>/base-ui.git#release&path:packages/styles"'
