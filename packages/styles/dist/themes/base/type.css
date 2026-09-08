@@ -1,0 +1,15 @@
+/*
+  Base Theme — typography tokens. Declared inside @theme so Tailwind v4
+  generates the `font-sans` / `font-mono` utilities from them.
+*/
+@theme inline {
+  --font-sans:
+    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@layer base {
+  :root {
+    font-family: var(--font-sans);
+  }
+}

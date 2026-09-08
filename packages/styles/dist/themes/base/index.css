@@ -1,0 +1,10 @@
+/* Declares the theme variables - @see https://tailwindcss.com/docs/theme */
+@import "../shared/theme.css";
+
+/* Base Theme */
+@import "./variables.css" layer(theme);
+@import "./fonts.css" layer(base);
+@import "./type.css";
+
+/* Component customizations for the Base theme */
+@import "./components/index.css" layer(components);

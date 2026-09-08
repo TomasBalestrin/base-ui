@@ -1,0 +1,32 @@
+/*
+  Base Theme — self-hosted fonts. DM Sans (variable, 400-700) + IBM Plex Mono
+  (400/500). Font files live inside this theme dir (not a sibling package
+  path) — a relative path crossing a package boundary (`../../fonts/...`)
+  breaks when a consumer's node_modules symlink resolves through a
+  directory name containing a space (confirmed with Next.js/Turbopack via
+  `link:`/pnpm symlink — the URL is never percent-encoded).
+*/
+
+@font-face {
+  font-family: "DM Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("./fonts/dm-sans-variable.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "IBM Plex Mono";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("./fonts/ibm-plex-mono-500.woff2") format("woff2");
+}
