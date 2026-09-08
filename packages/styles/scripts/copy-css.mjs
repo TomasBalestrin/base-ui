@@ -15,7 +15,12 @@ if (!fs.existsSync(distDir)) {
 
 console.log("Copying CSS files to dist...");
 
-// Helper function to recursively copy CSS files
+// Self-hosted theme fonts (e.g. themes/base/fonts/*.woff2) referenced by
+// @font-face url() in a theme's CSS — must ship alongside it or the URL
+// 404s once the package is installed from outside the monorepo.
+const ASSET_EXTENSIONS = [".css", ".woff2", ".woff", ".ttf"];
+
+// Helper function to recursively copy CSS (and font asset) files
 const copyCssDirectory = (dirName) => {
   const srcDirPath = path.join(rootDir, dirName);
   const distDirPath = path.join(distDir, dirName);
@@ -40,8 +45,7 @@ const copyCssDirectory = (dirName) => {
     if (stat.isDirectory()) {
       // Recursively copy subdirectories
       copyCssDirectory(path.join(dirName, file));
-    } else if (file.endsWith(".css")) {
-      // Copy CSS files
+    } else if (ASSET_EXTENSIONS.some((ext) => file.endsWith(ext))) {
       fs.copyFileSync(srcFilePath, distFilePath);
       console.log(`✓ Copied: ${path.join(dirName, file)}`);
     }
