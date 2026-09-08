@@ -148,10 +148,17 @@ function main() {
   const hash = createHash("sha256");
 
   for (const f of sourceFiles) {
+    // Hash a path RELATIVE to REPO_ROOT, never the absolute path — a
+    // missing file (e.g. form/form.styles.ts, which intentionally has
+    // none) still needs to affect the hash deterministically, but the
+    // absolute path changes if the repo is ever moved/cloned elsewhere,
+    // which would report false drift with no real content change.
+    const relPath = f.replace(REPO_ROOT, "");
+
     try {
       hash.update(readFileSync(f));
     } catch {
-      hash.update(f); // missing file still affects the hash deterministically
+      hash.update(relPath);
     }
   }
 

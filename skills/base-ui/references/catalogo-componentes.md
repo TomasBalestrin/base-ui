@@ -1,5 +1,5 @@
 <!-- GERADO por scripts/gen-component-catalog.mjs — não editar à mão. -->
-<!-- source-hash: 7536beb18f7c9b34 -->
+<!-- source-hash: 42b3d4190bf96d25 -->
 
 # Catálogo de componentes
 
